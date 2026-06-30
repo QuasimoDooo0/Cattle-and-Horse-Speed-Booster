@@ -1,0 +1,541 @@
+/* ===== 全局重置 & 基础 ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+}
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0b0b1a;
+    color: #e0e0f0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background-image: radial-gradient(circle at 20% 30%, rgba(80, 60, 180, 0.15) 0%, transparent 60%),
+                      radial-gradient(circle at 80% 70%, rgba(60, 180, 220, 0.1) 0%, transparent 50%);
+}
+
+/* ===== 顶部工具栏 ===== */
+.toolbar {
+    flex-shrink: 0;
+    background: rgba(18, 18, 40, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 8px 20px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    z-index: 10;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+.toolbar .group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.toolbar .group-label {
+    font-size: 12px;
+    color: #8a8ac0;
+    margin-right: 4px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+.toolbar button,
+.toolbar label.btn {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(40, 40, 80, 0.6);
+    color: #c8c8f0;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(4px);
+    font-family: inherit;
+}
+.toolbar button:hover,
+.toolbar label.btn:hover {
+    background: rgba(70, 70, 140, 0.7);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(80, 60, 200, 0.25);
+    border-color: rgba(140, 140, 255, 0.2);
+}
+.toolbar button.active {
+    background: rgba(90, 70, 210, 0.7);
+    border-color: #8a6aff;
+    color: #fff;
+    box-shadow: 0 0 24px rgba(90, 70, 210, 0.3);
+}
+.toolbar button.danger {
+    background: rgba(200, 60, 80, 0.25);
+    color: #f0a0b0;
+}
+.toolbar button.danger:hover {
+    background: rgba(200, 60, 80, 0.4);
+    border-color: rgba(255, 100, 120, 0.3);
+}
+.toolbar button.success {
+    background: rgba(60, 200, 120, 0.2);
+    color: #80e0b0;
+}
+.toolbar button.success:hover {
+    background: rgba(60, 200, 120, 0.35);
+    border-color: rgba(100, 255, 160, 0.3);
+}
+.toolbar button.warning {
+    background: rgba(220, 180, 60, 0.2);
+    color: #f0d080;
+}
+.toolbar button.warning:hover {
+    background: rgba(220, 180, 60, 0.35);
+    border-color: rgba(255, 220, 100, 0.3);
+}
+.toolbar button.mask-btn {
+    background: rgba(160, 100, 220, 0.2);
+    color: #c8a0f0;
+}
+.toolbar button.mask-btn.active {
+    background: rgba(160, 100, 220, 0.4);
+    border-color: #b080ff;
+    box-shadow: 0 0 24px rgba(160, 100, 220, 0.25);
+}
+.toolbar .separator {
+    width: 1px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.08);
+}
+.toolbar input[type="file"] {
+    display: none;
+}
+.toolbar .badge {
+    background: rgba(255, 255, 255, 0.06);
+    padding: 2px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: #b0b0e0;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* 颜色选择器 & 线型按钮 */
+.toolbar input[type="color"] {
+    width: 32px;
+    height: 32px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    padding: 2px;
+    transition: all 0.2s;
+}
+.toolbar input[type="color"]:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+.toolbar .line-style-btn {
+    padding: 4px 10px;
+    background: rgba(40, 40, 80, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    color: #c0c0e8;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+.toolbar .line-style-btn.active {
+    background: rgba(90, 70, 210, 0.4);
+    border-color: #8a6aff;
+    color: #fff;
+}
+
+/* 遮罩参数输入组 */
+.mask-params {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 4px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(8px);
+    flex-wrap: wrap;
+}
+.mask-params label {
+    font-size: 12px;
+    color: #b0b0e0;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+.mask-params input[type="number"] {
+    width: 48px;
+    padding: 4px 6px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(0, 0, 0, 0.4);
+    color: #eee;
+    font-size: 12px;
+    text-align: center;
+    outline: none;
+    transition: border 0.2s;
+    font-family: inherit;
+}
+.mask-params input[type="number"]:focus {
+    border-color: #8a6aff;
+    box-shadow: 0 0 12px rgba(138, 106, 255, 0.15);
+}
+.mask-params .param-label {
+    color: #8a8ac0;
+    font-size: 11px;
+    margin-right: 2px;
+}
+.mask-params .btn-small {
+    padding: 4px 12px;
+    font-size: 12px;
+    background: rgba(60, 60, 140, 0.4);
+    border: none;
+    border-radius: 8px;
+    color: #d0d0f0;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+.mask-params .btn-small:hover {
+    background: rgba(80, 80, 180, 0.5);
+}
+.mask-params .checkbox-label {
+    font-size: 12px;
+    color: #b0b0e0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+}
+.mask-params .checkbox-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #8a6aff;
+    cursor: pointer;
+}
+
+/* ===== 主体区域 ===== */
+.main {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    gap: 0;
+}
+
+/* ===== 左侧图片列表 ===== */
+.sidebar {
+    width: 200px;
+    flex-shrink: 0;
+    background: rgba(16, 16, 36, 0.6);
+    backdrop-filter: blur(8px);
+    border-right: 1px solid rgba(255, 255, 255, 0.04);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.sidebar-header {
+    padding: 14px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #c0c0f0;
+    background: rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    flex-shrink: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    letter-spacing: 0.3px;
+}
+.sidebar-header span {
+    font-weight: 400;
+    color: #8888b0;
+    font-size: 13px;
+    background: rgba(255, 255, 255, 0.04);
+    padding: 2px 12px;
+    border-radius: 20px;
+}
+.sidebar-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 10px;
+}
+.sidebar-list::-webkit-scrollbar {
+    width: 4px;
+}
+.sidebar-list::-webkit-scrollbar-thumb {
+    background: rgba(138, 106, 255, 0.3);
+    border-radius: 4px;
+}
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 4px;
+    border: 1px solid transparent;
+    background: rgba(255, 255, 255, 0.02);
+}
+.sidebar-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.05);
+    transform: translateX(4px);
+}
+.sidebar-item.active {
+    background: rgba(90, 70, 210, 0.2);
+    border-color: rgba(138, 106, 255, 0.3);
+    box-shadow: 0 0 20px rgba(138, 106, 255, 0.05);
+}
+.sidebar-item img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 10px;
+    background: #1a1a2e;
+    flex-shrink: 0;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.sidebar-item .name {
+    font-size: 13px;
+    color: #c8c8f0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+}
+.sidebar-item .mark-count {
+    font-size: 11px;
+    background: rgba(138, 106, 255, 0.2);
+    padding: 2px 10px;
+    border-radius: 20px;
+    color: #b0a0e0;
+    font-weight: 500;
+}
+.empty-folder {
+    color: #6a6a90;
+    text-align: center;
+    padding: 40px 10px;
+    font-size: 14px;
+    opacity: 0.6;
+}
+
+/* ===== 右侧画布区域 ===== */
+.canvas-wrap {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+.canvas-wrap canvas {
+    max-width: 100%;
+    max-height: 100%;
+    background: #14142a;
+    box-shadow: 0 8px 48px rgba(0, 0, 0, 0.6);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    image-rendering: auto;
+    cursor: crosshair;
+}
+.canvas-placeholder {
+    color: #6a6a90;
+    font-size: 18px;
+    text-align: center;
+    padding: 20px;
+}
+.canvas-placeholder .icon {
+    font-size: 48px;
+    display: block;
+    margin-bottom: 12px;
+    opacity: 0.3;
+}
+
+/* ===== 状态栏 ===== */
+.statusbar {
+    flex-shrink: 0;
+    background: rgba(12, 12, 28, 0.8);
+    backdrop-filter: blur(8px);
+    padding: 6px 20px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #8888b0;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+.statusbar .hint {
+    color: #a0a0d0;
+}
+.statusbar .hint strong {
+    color: #c0c0f0;
+}
+
+/* ===== 导出模态框 ===== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(12px);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+.modal-overlay.open {
+    display: flex;
+}
+.modal-box {
+    background: rgba(24, 24, 52, 0.85);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 32px 40px;
+    max-width: 480px;
+    width: 90%;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.modal-box h3 {
+    margin-bottom: 20px;
+    color: #d0d0f0;
+    font-weight: 500;
+    font-size: 20px;
+    letter-spacing: 0.3px;
+}
+.modal-box .field {
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+.modal-box .field label {
+    color: #b0b0e0;
+    font-size: 14px;
+    min-width: 100px;
+    font-weight: 500;
+}
+.modal-box .field select {
+    background: rgba(0, 0, 0, 0.4);
+    color: #eee;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    transition: border 0.2s;
+}
+.modal-box .field select:focus {
+    border-color: #8a6aff;
+}
+.modal-box .field input[type="range"] {
+    width: 140px;
+    background: rgba(255, 255, 255, 0.1);
+    height: 4px;
+    border-radius: 4px;
+    -webkit-appearance: none;
+}
+.modal-box .field input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #8a6aff;
+    cursor: pointer;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+.modal-box .field .range-value {
+    color: #d0d0f0;
+    font-size: 14px;
+    min-width: 40px;
+}
+.modal-box .field input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #8a6aff;
+    cursor: pointer;
+}
+.modal-box .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+}
+.modal-box .actions button {
+    padding: 8px 24px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+.modal-box .actions .btn-primary {
+    background: linear-gradient(135deg, #6a4aff, #8a6aff);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(138, 106, 255, 0.3);
+}
+.modal-box .actions .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(138, 106, 255, 0.4);
+}
+.modal-box .actions .btn-secondary {
+    background: rgba(255, 255, 255, 0.06);
+    color: #b0b0e0;
+}
+.modal-box .actions .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+/* ===== 响应式 ===== */
+@media (max-width: 820px) {
+    .sidebar {
+        width: 160px;
+    }
+    .toolbar {
+        padding: 6px 12px;
+        gap: 6px 10px;
+    }
+    .toolbar button,
+    .toolbar label.btn {
+        padding: 4px 10px;
+        font-size: 12px;
+    }
+    .mask-params input[type="number"] {
+        width: 40px;
+    }
+    .mask-params label {
+        font-size: 11px;
+    }
+    .modal-box {
+        padding: 24px 20px;
+    }
+}
+@media (max-width: 600px) {
+    .sidebar {
+        width: 120px;
+    }
+    .mask-params {
+        padding: 2px 8px;
+    }
+}

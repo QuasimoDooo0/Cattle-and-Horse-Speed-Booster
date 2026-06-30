@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>图片标注工具 · 艺术版</title>
+    <!-- Google Fonts 优雅字体 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <!-- JSZip 用于批量导出 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js">
+    </script>
+</head>
+<body>
+
+    <!-- ===== 工具栏 ===== -->
+    <div class="toolbar" id="toolbar">
+        <div class="group">
+            <label class="btn" for="folderInput">📁 文件夹</label>
+            <input type="file" id="folderInput" webkitdirectory multiple />
+            <span class="badge" id="fileCount">0</span>
+        </div>
+
+        <div class="separator"></div>
+
+        <div class="group">
+            <span class="group-label">✏️</span>
+            <button data-tool="rect" class="active">▭</button>
+            <button data-tool="circle">◯</button>
+            <button data-tool="rotated">◇</button>
+            <input type="color" id="annotationColor" value="#4fc3f7" title="标注颜色" />
+            <button class="line-style-btn active" id="lineSolid" title="实线">—</button>
+            <button class="line-style-btn" id="lineDashed" title="虚线">- -</button>
+        </div>
+
+        <div class="separator"></div>
+
+        <div class="group">
+            <button class="mask-btn" id="maskToggleBtn">🎭 遮罩</button>
+        </div>
+
+        <div class="separator"></div>
+
+        <div class="group mask-params" id="maskParams" style="display:none;">
+            <label><span class="param-label">X</span><input type="number" id="maskX" step="1" /></label>
+            <label><span class="param-label">Y</span><input type="number" id="maskY" step="1" /></label>
+            <label><span class="param-label">W</span><input type="number" id="maskW" step="1" min="1" /></label>
+            <label><span class="param-label">H</span><input type="number" id="maskH" step="1" min="1" /></label>
+            <button class="btn-small" id="applyMaskBtn">应用</button>
+            <button class="btn-small" id="syncMaskPosBtn">📌同步</button>
+            <label class="checkbox-label"><input type="checkbox" id="maskEnabledCheck" checked /> 启用</label>
+            <label class="checkbox-label"><input type="checkbox" id="maskNormalizedCheck" /> 归一化</label>
+        </div>
+
+        <div class="separator"></div>
+
+        <div class="group">
+            <button class="danger" id="undoBtn">↩</button>
+            <button class="danger" id="clearBtn">✕</button>
+            <button class="danger" id="deleteSelectedBtn">🗑️</button>
+        </div>
+
+        <div class="separator"></div>
+
+        <div class="group">
+            <button class="success" id="exportSingleBtn">💾 导出当前</button>
+            <button class="warning" id="batchSaveBtn">📦 全部打包</button>
+        </div>
+    </div>
+
+    <!-- ===== 主体 ===== -->
+    <div class="main">
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                图片列表
+                <span id="listCount">0</span>
+            </div>
+            <div class="sidebar-list" id="imageList">
+                <div class="empty-folder">📂 请选择文件夹</div>
+            </div>
+        </div>
+
+        <div class="canvas-wrap" id="canvasWrap">
+            <canvas id="mainCanvas"></canvas>
+            <div class="canvas-placeholder" id="placeholder">
+                <span class="icon">🖼️</span>
+                选择文件夹加载图片<br />
+                <span style="font-size:13px;color:#4a6a8a;">左侧列表点击图片查看</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="statusbar" id="statusbar">
+        <span class="hint" id="statusHint">💡 选择文件夹开始 | 遮罩尺寸全局，位置独立</span>
+        <span id="statusInfo">标注: 0 | 选中: 无</span>
+    </div>
+
+    <!-- ===== 导出模态框 ===== -->
+    <div class="modal-overlay" id="exportModal">
+        <div class="modal-box">
+            <h3>📤 导出图片</h3>
+            <div class="field">
+                <label>格式</label>
+                <select id="exportFormat">
+                    <option value="png">PNG (无损)</option>
+                    <option value="jpeg">JPEG (压缩)</option>
+                </select>
+            </div>
+            <div class="field" id="jpegQualityField">
+                <label>质量</label>
+                <input type="range" id="jpegQuality" min="10" max="100" value="90" />
+                <span class="range-value" id="jpegQualityLabel">90%</span>
+            </div>
+            <div class="field">
+                <label>裁剪 (遮罩)</label>
+                <input type="checkbox" id="exportCrop" checked />
+            </div>
+            <div class="field">
+                <label>绘制标注</label>
+                <input type="checkbox" id="exportAnnotations" checked />
+            </div>
+            <div class="actions">
+                <button class="btn-secondary" id="modalCancel">取消</button>
+                <button class="btn-primary" id="modalExport">导出</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
